@@ -78,7 +78,7 @@ Set-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVers
 
 # Remove Include in library from context menu
 Remove-Item -Path "HKCR:\Folder\ShellEx\Library Location" -Recurse -ErrorAction SilentlyContinue
-Remove-Item -Path "HKLM:\SOFTWARE\Classes\Folder\ShellEx\ContextMenuHandlers\Library Location" -Recurse
+Remove-Item -Path "HKLM:\SOFTWARE\Classes\Folder\ShellEx\ContextMenuHandlers\Library Location" -Recurse -ErrorAction SilentlyContinue
 
 ## Hide Folder From "This PC"
 
@@ -187,15 +187,19 @@ Copy-Item "$PSScriptRoot\DesktopINI\Desktop.ini.c.txt" -Destination "$TargetDire
 ## Documents
 # folder 'Documents' on Disk 'D'
 $TargetDirectory = "$User_Profile\Documents"
-Remove-Item -Path "$TargetDirectory\Desktop.ini" -Force
+If (Test-Path "$($TargetDirectory)\desktop.ini")  {
+  Remove-Item -Path "$TargetDirectory\desktop.ini" -Force
+}
 #Copy-Item "D:\Customize\Win10\Install\DesktopINI\Desktop.ini.doc.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 Copy-Item "$PSScriptRoot\DesktopINI\Desktop.ini.doc.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 (Get-Item "$($TargetDirectory)\desktop.ini" -Force).Attributes = 'Hidden, System, Archive'
 ## Downloads
 $TargetDirectory = "$User_Profile\Downloads"
-Remove-Item -Path "$TargetDirectory\desktop.ini" -Force
-#Copy-Item "$PSScriptRoot\DesktopINI\Desktop.ini.dl.txt" -Destination "$User_Profile\Downloads\desktop.ini" -Force
-Copy-Item "D:\Customize\Win10\Install\DesktopINI\Desktop.ini.dl.txt" -Destination "$TargetDirectory\desktop.ini" -Force
+If (Test-Path "$($TargetDirectory)\desktop.ini")  {
+  Remove-Item -Path "$TargetDirectory\desktop.ini" -Force
+}
+#Copy-Item "D:\Customize\Win10\Install\DesktopINI\Desktop.ini.dl.txt" -Destination "$TargetDirectory\desktop.ini" -Force
+Copy-Item "$PSScriptRoot\DesktopINI\Desktop.ini.dl.txt" -Destination "$User_Profile\Downloads\desktop.ini" -Force
 (Get-Item "$($TargetDirectory)\desktop.ini" -Force).Attributes = 'Hidden, System, Archive'
 ## Favorites
 $TargetDirectory = "$User_Profile\Favorites"
@@ -285,7 +289,6 @@ REG ADD "HKCR\Applications\i_view64.exe\DefaultIcon" /ve /d "$User_Profile\Pictu
 # Install Theme
 Invoke-Expression $PSScriptRoot\Theme2020.deskthemepack
 
-
-Read-Host -Prompt 'Press any key to restart...'
+Read-Host -Prompt 'Press any key to restart computer...'
 
 restart-computer
