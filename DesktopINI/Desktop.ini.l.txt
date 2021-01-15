@@ -1,0 +1,11 @@
+[.ShellClassInfo]
+LocalizedResourceName=@%SystemRoot%\system32\shell32.dll,-21810
+IconResource=%USERPROFILE%\Pictures\folder-publicshare.ico,0
+DefaultDropEffect=4
+[LocalizedFileNames]
+Desktop.lnk=@shell32.dll,-21769
+Downloads.lnk=@shell32.dll,-21798
+[ViewState]
+Mode=
+Vid=
+FolderType=Generic

@@ -1,0 +1,7 @@
+[.ShellClassInfo]
+LocalizedResourceName=@%SystemRoot%\system32\shell32.dll,-21813
+IconResource=%USERPROFILE%\Pictures\folder-contacts.ico,0
+[ViewState]
+Mode=1
+Vid=
+FolderType=Generic

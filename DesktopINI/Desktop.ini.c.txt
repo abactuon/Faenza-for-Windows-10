@@ -1,0 +1,4 @@
+[.ShellClassInfo]
+LocalizedResourceName=@%CommonProgramFiles%\system\wab32res.dll,-10100
+InfoTip=@%CommonProgramFiles%\system\wab32res.dll,-10200
+IconResource=%USERPROFILE%\Pictures\folder-contacts.ico,0

@@ -1,0 +1,2 @@
+[.ShellClassInfo]
+IconResource=%USERPROFILE%\Pictures\folder-recent.ico,0

@@ -1,0 +1,6 @@
+[.ShellClassInfo]
+IconResource=%USERPROFILE%\Pictures\folder-pictures.ico,0
+[ViewState]
+Mode=
+Vid=
+FolderType=Generic

@@ -1,0 +1,9 @@
+[.ShellClassInfo]
+LocalizedResourceName=@%SystemRoot%\system32\shell32.dll,-21770
+IconResource=%USERPROFILE%\Pictures\folder-documents.ico,0
+IconFile=%SystemRoot%\system32\shell32.dll
+IconIndex=-235
+[ViewState]
+Mode=
+Vid=
+FolderType=Generic

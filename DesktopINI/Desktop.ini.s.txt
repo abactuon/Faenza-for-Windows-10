@@ -1,0 +1,10 @@
+[.ShellClassInfo]
+LocalizedResourceName=@%SystemRoot%\system32\shell32.dll,-9031
+IconResource=%USERPROFILE%\Pictures\folder-saved-search.ico,0
+[LocalizedFileNames]
+Indexed Locations.search-ms=@searchfolder.dll,-32820
+Everywhere.search-ms=@searchfolder.dll,-32822
+[ViewState]
+Mode=
+Vid=
+FolderType=Generic
