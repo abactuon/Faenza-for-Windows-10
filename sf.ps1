@@ -289,6 +289,7 @@ REG ADD "HKCR\Applications\i_view64.exe\DefaultIcon" /ve /d "$User_Profile\Pictu
 # Install Theme
 Invoke-Expression $PSScriptRoot\Theme2020.deskthemepack
 
-Read-Host -Prompt 'Press any key to restart computer...'
+Read-Host -Prompt 'You may need to restart your computer.'
+Read-Host -Prompt 'Press any key ...'
 
-restart-computer
+#restart-computer
