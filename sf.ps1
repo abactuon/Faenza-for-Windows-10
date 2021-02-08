@@ -16,8 +16,16 @@ If (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explor
 
 $User_Profile = $env:UserProfile
 
+$IR="C:\Windows\MyIcons"
+
+# Icons
+If (!(Test-Path "$IR")) {
+	New-Item -Path "$IR" -ItemType Directory
+}
+Copy-Item "$PSScriptRoot\Pictures\*" -Destination "$IR" -Force
+
+
 # To Turn Off Thumbnail Previews
-#REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V IconsOnly /T REG_DWORD /D 1 /f
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "DisableThumbnails" -Type DWord -Value 1
 
 # Default Folder View -> General
@@ -25,13 +33,11 @@ If (!(Test-Path "HKCU:\SOFTWARE\Classes\Local Settings\SOFTWARE\Microsoft\Window
 	New-Item -Path "HKCU:\SOFTWARE\Classes\Local Settings\SOFTWARE\Microsoft\Windows\Shell\Bags\AllFolders\Shell" 
 }
 Set-ItemProperty -Path "HKCU:\SOFTWARE\Classes\Local Settings\SOFTWARE\Microsoft\Windows\Shell\Bags\AllFolders\Shell" -Name "FolderType" -Type String -Value "NotSpecified"
-# REG ADD "HKCU\SOFTWARE\Classes\Local Settings\SOFTWARE\Microsoft\Windows\Shell\Bags\AllFolders\Shell" /v FolderType /t REG_SZ /d "NotSpecified" /f
 
 # Disable window anim. min/max
 Set-ItemProperty -Path "HKCU:\Control Panel\Desktop\WindowMetrics" -Name "MinAnimate" -Type String -Value "0"
 
 # Show This PC shortcut on desktop 
-#REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /v "{20D04FE0-3AEA-1069-A2D8-08002B30309D}" /t REG_DWORD /d 00000000 /f
 If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel")) {
 	New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" 
 }
@@ -40,15 +46,25 @@ If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDe
 	New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\ClassicStartMenu" 
 }
 Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\ClassicStartMenu" -Name "{20D04FE0-3AEA-1069-A2D8-08002B30309D}" -Type DWord -Value 0
-#REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\ClassicStartMenu" /v "{20D04FE0-3AEA-1069-A2D8-08002B30309D}" /t REG_DWORD /d 00000000 /f
+
+# This PC Icon
+If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CLSID\{20D04FE0-3AEA-1069-A2D8-08002B30309D}\DefaultIcon")) {
+	New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CLSID\{20D04FE0-3AEA-1069-A2D8-08002B30309D}\DefaultIcon" 
+}
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CLSID\{20D04FE0-3AEA-1069-A2D8-08002B30309D}\DefaultIcon" -Name "(default)" -Value "$IR\hardinfo.ico,0"
 
 # Hide Libraries in Navigation Pane
-#REG ADD "HKCU\SOFTWARE\Classes\CLSID\{031E4825-7B94-4dc3-B131-E946B44C8DD5}" /v System.IsPinnedToNameSpaceTree /t REG_DWORD /d 0 /f
 If (!(Test-Path "HKCU:\SOFTWARE\Classes\CLSID\{031E4825-7B94-4dc3-B131-E946B44C8DD5}")) {
 	New-Item -Path "HKCU:\SOFTWARE\Classes\CLSID\{031E4825-7B94-4dc3-B131-E946B44C8DD5}" 
 }
 Set-ItemProperty -Path "HKCU:\SOFTWARE\Classes\CLSID\{031E4825-7B94-4dc3-B131-E946B44C8DD5}" -Name "System.IsPinnedToNameSpaceTree" -Type DWORD -Value 0
 
+
+# USER Icon
+If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CLSID\{59031A47-3F72-44A7-89C5-5595FE6B30EE}\DefaultIcon")) {
+	New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CLSID\{59031A47-3F72-44A7-89C5-5595FE6B30EE}\DefaultIcon" 
+}
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CLSID\{59031A47-3F72-44A7-89C5-5595FE6B30EE}\DefaultIcon" -Name "(default)" -Value "$IR\user-info.ico,0"
 
 ## Hide Folder From Library
 
@@ -83,12 +99,10 @@ Remove-Item -Path "HKLM:\SOFTWARE\Classes\Folder\ShellEx\ContextMenuHandlers\Lib
 ## Hide Folder From "This PC"
 
 # 3D Objects
-#REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{31C0DD25-9439-4F12-BF41-7FF4EDA38722}\PropertyBag" /v ThisPCPolicy /d "Hide" /f
 If (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{31C0DD25-9439-4F12-BF41-7FF4EDA38722}\PropertyBag")) {
 	New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{31C0DD25-9439-4F12-BF41-7FF4EDA38722}\PropertyBag" 
 }
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{31C0DD25-9439-4F12-BF41-7FF4EDA38722}\PropertyBag" -Name "ThisPCPolicy" -Value "Hide"
-#REG ADD "HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{31C0DD25-9439-4F12-BF41-7FF4EDA38722}\PropertyBag" /v ThisPCPolicy /d "Hide" /f
 If (!(Test-Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{31C0DD25-9439-4F12-BF41-7FF4EDA38722}\PropertyBag")) {
 	New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{31C0DD25-9439-4F12-BF41-7FF4EDA38722}\PropertyBag" 
 }
@@ -123,11 +137,6 @@ Set-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVers
 Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "LaunchTo" -Type DWORD -Value 1
 
 
-# Pictures
-Copy-Item "$PSScriptRoot\Pictures\*" -Destination "$User_Profile\Pictures\" -Force
-#Copy-Item "D:\Customize\Themes\Icons\Pictures\*" -Destination "$User_Profile\Pictures\" -Force
-
-
 ### Desktop.ini with new icon
 
 
@@ -135,7 +144,7 @@ Copy-Item "$PSScriptRoot\Pictures\*" -Destination "$User_Profile\Pictures\" -For
 $TargetDirectory = "C:\Windows"
 $DesktopIni = @"
 [.ShellClassInfo]
-IconResource=%USERPROFILE%\Pictures\folder-windows.ico,0
+IconResource=%USERPROFILE%\$IR\folder-windows.ico,0
 "@
 
 If (Test-Path "$($TargetDirectory)\desktop.ini")  {
@@ -156,7 +165,6 @@ Else  {
 ## Desktop
 $TargetDirectory = "$User_Profile\Desktop"
 Remove-Item -Path "$TargetDirectory\desktop.ini" -Force
-#Copy-Item "D:\Customize\Win10\Install\DesktopINI\Desktop.ini.dt.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 Copy-Item "$PSScriptRoot\DesktopINI\Desktop.ini.dt.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 (Get-Item "$($TargetDirectory)\desktop.ini" -Force).Attributes = 'Hidden, System, Archive'
 
@@ -168,20 +176,20 @@ $TargetDirectory = "C:\Users"
 If (Test-Path "$($TargetDirectory)\desktop.ini")  {
   Remove-Item -Path "$TargetDirectory\desktop.ini" -Force
 }
-#Copy-Item "D:\Customize\Themes\Icons\GitHub\DesktopINI\Desktop.ini.u.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 Copy-Item "$PSScriptRoot\DesktopINI\Desktop.ini.u.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 (Get-Item "$($TargetDirectory)\desktop.ini" -Force).Attributes = 'Hidden, System, Archive'
 
-## Admin no
-
-# USER Icon
-#REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CLSID\{59031A47-3F72-44A7-89C5-5595FE6B30EE}\DefaultIcon" /ve /d "$User_Profile\Pictures\user-info.ico,0" /f
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CLSID\{59031A47-3F72-44A7-89C5-5595FE6B30EE}" -Name "DefaultIcon" -Value "$User_Profile\Pictures\user-info.ico,0"
+## Admin
+$TargetDirectory = "$User_Profile"
+If (Test-Path "$($TargetDirectory)\desktop.ini")  {
+  Remove-Item -Path "$TargetDirectory\desktop.ini" -Force
+}
+Copy-Item "$PSScriptRoot\DesktopINI\Desktop.ini.i.txt" -Destination "$TargetDirectory\desktop.ini" -Force
+(Get-Item "$($TargetDirectory)\desktop.ini" -Force).Attributes = 'Hidden, System, Archive'
 
 ## Contacts
 $TargetDirectory = "$User_Profile\Contacts"
 Remove-Item -Path "$TargetDirectory\desktop.ini" -Force
-#Copy-Item "D:\Customize\Win10\Install\DesktopINI\Desktop.ini.c.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 Copy-Item "$PSScriptRoot\DesktopINI\Desktop.ini.c.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 (Get-Item "$($TargetDirectory)\desktop.ini" -Force).Attributes = 'Hidden, System, Archive'
 ## Documents
@@ -190,7 +198,6 @@ $TargetDirectory = "$User_Profile\Documents"
 If (Test-Path "$($TargetDirectory)\desktop.ini")  {
   Remove-Item -Path "$TargetDirectory\desktop.ini" -Force
 }
-#Copy-Item "D:\Customize\Win10\Install\DesktopINI\Desktop.ini.doc.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 Copy-Item "$PSScriptRoot\DesktopINI\Desktop.ini.doc.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 (Get-Item "$($TargetDirectory)\desktop.ini" -Force).Attributes = 'Hidden, System, Archive'
 ## Downloads
@@ -198,98 +205,81 @@ $TargetDirectory = "$User_Profile\Downloads"
 If (Test-Path "$($TargetDirectory)\desktop.ini")  {
   Remove-Item -Path "$TargetDirectory\desktop.ini" -Force
 }
-#Copy-Item "D:\Customize\Win10\Install\DesktopINI\Desktop.ini.dl.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 Copy-Item "$PSScriptRoot\DesktopINI\Desktop.ini.dl.txt" -Destination "$User_Profile\Downloads\desktop.ini" -Force
 (Get-Item "$($TargetDirectory)\desktop.ini" -Force).Attributes = 'Hidden, System, Archive'
 ## Favorites
 $TargetDirectory = "$User_Profile\Favorites"
 Remove-Item -Path "$TargetDirectory\desktop.ini" -Force
-#Copy-Item "D:\Customize\Win10\Install\DesktopINI\Desktop.ini.f.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 Copy-Item "$PSScriptRoot\DesktopINI\Desktop.ini.f.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 (Get-Item "$($TargetDirectory)\desktop.ini" -Force).Attributes = 'Hidden, System, Archive'
 ## Links
 $TargetDirectory = "$User_Profile\Links"
 Remove-Item -Path "$TargetDirectory\desktop.ini" -Force
-#Copy-Item "D:\Customize\Win10\Install\DesktopINI\Desktop.ini.l.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 Copy-Item "$PSScriptRoot\DesktopINI\Desktop.ini.l.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 (Get-Item "$($TargetDirectory)\desktop.ini" -Force).Attributes = 'Hidden, System, Archive'
 ## Music
 $TargetDirectory = "$User_Profile\Music"
 Remove-Item -Path "$TargetDirectory\desktop.ini" -Force
-#Copy-Item "D:\Customize\Win10\Install\DesktopINI\Desktop.ini.m.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 Copy-Item "$PSScriptRoot\DesktopINI\Desktop.ini.m.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 (Get-Item "$($TargetDirectory)\desktop.ini" -Force).Attributes = 'Hidden, System, Archive'
 ## Pictures
 $TargetDirectory = "$User_Profile\Pictures"
 Remove-Item -Path "$TargetDirectory\desktop.ini" -Force
-#Copy-Item "D:\Customize\Win10\Install\DesktopINI\Desktop.ini.p.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 Copy-Item "$PSScriptRoot\DesktopINI\Desktop.ini.p.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 (Get-Item "$($TargetDirectory)\desktop.ini" -Force).Attributes = 'Hidden, System, Archive'
 ## Saved Games
 $TargetDirectory = "$User_Profile\Saved Games"
 Remove-Item -Path "$TargetDirectory\desktop.ini" -Force
-#Copy-Item "D:\Customize\Win10\Install\DesktopINI\Desktop.ini.sg.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 Copy-Item "$PSScriptRoot\DesktopINI\Desktop.ini.sg.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 (Get-Item "$($TargetDirectory)\desktop.ini" -Force).Attributes = 'Hidden, System, Archive'
 ## Searches
 $TargetDirectory = "$User_Profile\Searches"
 Remove-Item -Path "$TargetDirectory\desktop.ini" -Force
-#Copy-Item "D:\Customize\Win10\Install\DesktopINI\Desktop.ini.s.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 Copy-Item "$PSScriptRoot\DesktopINI\Desktop.ini.s.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 (Get-Item "$($TargetDirectory)\desktop.ini" -Force).Attributes = 'Hidden, System, Archive'
 ## Videos
 $TargetDirectory = "$User_Profile\Videos"
 Remove-Item -Path "$TargetDirectory\desktop.ini" -Force
-#Copy-Item "D:\Customize\Win10\Install\DesktopINI\Desktop.ini.v.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 Copy-Item "$PSScriptRoot\DesktopINI\Desktop.ini.v.txt" -Destination "$TargetDirectory\desktop.ini" -Force
 (Get-Item "$($TargetDirectory)\desktop.ini" -Force).Attributes = 'Hidden, System, Archive'
 
-# Drive Icon
-REG ADD "HKCU\SOFTWARE\Classes\Applications\Explorer.exe\Drives\C\DefaultIcon" /ve /d "$User_Profile\Pictures\DiskC.ico,0" /f
-REG ADD "HKCU\SOFTWARE\Classes\Applications\Explorer.exe\Drives\D\DefaultIcon" /ve /d "$User_Profile\Pictures\DiskD.ico,0" /f
-REG ADD "HKCU\SOFTWARE\Classes\Applications\Explorer.exe\Drives\E\DefaultIcon" /ve /d "$User_Profile\Pictures\DiskE.ico,0" /f
 
 # Folder Icon
-REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /T REG_SZ  /V "3" /D "$User_Profile\Pictures\folder.ico,0" /f
-REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /T REG_SZ  /V "4" /D "$User_Profile\Pictures\folder-open.ico,0" /f
-
-# This PC Icon
-#REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CLSID\{20D04FE0-3AEA-1069-A2D8-08002B30309D}\DefaultIcon" /ve /d "$User_Profile\Pictures\hardinfo.ico,0" /f
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CLSID\{20D04FE0-3AEA-1069-A2D8-08002B30309D}" -Name "DefaultIcon" -Value "$User_Profile\Pictures\hardinfo.ico,0"
+REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /T REG_SZ  /V "3" /D "$IR\folder.ico,0" /f
+REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /T REG_SZ  /V "4" /D "$IR\folder-open.ico,0" /f
+REG ADD "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /T REG_SZ  /V "3" /D "$IR\folder.ico,0" /f
+REG ADD "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /T REG_SZ  /V "4" /D "$IR\folder-open.ico,0" /f
+# Disk Icon
+REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /T REG_SZ  /V "107" /D "$IR\DiskWindows.ico,0" /f
+REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /T REG_SZ  /V "8" /D "$IR\DiskStandart.ico,0" /f
+REG ADD "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /T REG_SZ  /V "107" /D "$IR\DiskWindows.ico,0" /f
+REG ADD "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /T REG_SZ  /V "8" /D "$IR\DiskStandart.ico,0" /f
 
 #
-REG ADD "HKCR\.txt\DefaultIcon" /ve /d "$User_Profile\Pictures\text-plain.ico,0" /f
-REG ADD "HKCR\.pdf\DefaultIcon" /ve /d "$User_Profile\Pictures\pdf.ico,0" /f
-REG ADD "HKCR\.xlsx\DefaultIcon" /ve /d "$User_Profile\Pictures\excel.ico,0" /f
-#REG ADD "HKCR\.img\DefaultIcon" /ve /d "$User_Profile\Pictures\text-plain.ico.ico,0" /f
-REG ADD "HKCR\.zip\DefaultIcon" /ve /d "$User_Profile\Pictures\zip.ico,0" /f
-REG ADD "HKCR\CompressedFolder\DefaultIcon" /ve /d "$User_Profile\Pictures\zip.ico,0" /f
-REG ADD "HKCR\htmlfile\DefaultIcon" /ve /d "$User_Profile\Pictures\text-html.ico,0" /f
-REG ADD "HKCR\.html\DefaultIcon" /ve /d "$User_Profile\text-html.ico,0" /f
-REG ADD "HKCR\.mp4\DefaultIcon" /ve /d "$User_Profile\Pictures\videos.ico,0" /f
-REG ADD "HKCR\.mkv\DefaultIcon" /ve /d "$User_Profile\Pictures\videos.ico,0" /f
-REG ADD "HKCR\.avi\DefaultIcon" /ve /d "$User_Profile\Pictures\videos.ico,0" /f
-REG ADD "HKCR\.7z\DefaultIcon" /ve /d "$User_Profile\Pictures\7zip.ico,0" /f
+REG ADD "HKCR\txtfile\DefaultIcon" /ve /d "$IR\text-plain.ico,0" /f
+REG ADD "HKCR\.pdf\DefaultIcon" /ve /d "$IR\pdf.ico,0" /f
+REG ADD "HKCR\.xlsx\DefaultIcon" /ve /d "$IR\excel.ico,0" /f
+REG ADD "HKCR\.zip\DefaultIcon" /ve /d "$IR\zip.ico,0" /f
+REG ADD "HKCR\CompressedFolder\DefaultIcon" /ve /d "$IR\zip.ico,0" /f
+REG ADD "HKCR\htmlfile\DefaultIcon" /ve /d "$IR\text-html.ico,0" /f
+REG ADD "HKCR\Unknown\DefaultIcon" /ve /d "$IR\unknown.ico,0" /f
+REG ADD "HKCR\dllfile\DefaultIcon" /ve /d "$IR\application-msdownload.ico,0" /f
+REG ADD "HKCR\pngfile\DefaultIcon" /ve /d "$IR\Pictures\image-png,0" /f
+REG ADD "HKCR\jpegfile\DefaultIcon" /ve /d "$IR\Pictures\image-jpeg,0" /f
+REG ADD "HKCR\Microsoft.PowerShellScript.1\DefaultIcon" /ve /d "$IR\text-source.ico,0" /f
+REG ADD "HKCR\MSEdgeHTM\DefaultIcon" /ve /d "$IR\Edge.ico,0" /f
+REG ADD "HKCR\batfile\DefaultIcon" /ve /d "$IR\text-script.ico,0" /f
+If (!(Test-Path "HKCR:\.torrent")) {
+	New-Item -Path "HKCR:\.torrent" -Force
+}
+REG ADD "HKCR\.torrent\DefaultIcon" /ve /d "$IR\torrent.ico,0" /f
 
-# Applications
-REG ADD "HKCR\Applications\notepad.exe\DefaultIcon" /ve /d "$User_Profile\Pictures\text-richtext.ico,0" /f
-REG ADD "HKCR\Applications\SciTE.exe\DefaultIcon" /ve /d "$User_Profile\Pictures\text-richtext.ico,0" /f
-REG ADD "HKCR\Applications\mpv.exe\DefaultIcon" /ve /d "$User_Profile\Pictures\videos.ico,0" /f
-REG ADD "HKCR\Applications\PlanMaker.exe\DefaultIcon" /ve /d "$User_Profile\Pictures\excel.ico,0" /f
-REG ADD "HKCR\Applications\SumatraPDF.exe\DefaultIcon" /ve /d "$User_Profile\Pictures\pdf.ico,0" /f
-REG ADD "HKCR\Applications\Bandizip64.exe\DefaultIcon" /ve /d "$User_Profile\Pictures\7zip.ico,0" /f
-REG ADD "HKCR\Applications\i_view64.exe\DefaultIcon" /ve /d "$User_Profile\Pictures\Picture.ico,0" /f
-
-# Remove 3D Objects icon from This PC - The icon remains in personal folders and open/save dialogs
-#Remove-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}" -Recurse -ErrorAction SilentlyContinue
-#Remove-Item -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}" -Recurse -ErrorAction SilentlyContinue
-#Remove-Item "$User_Profile\3D Objects" -Recurse -Force
-
+ie4uinit.exe -show
 
 # Install Theme
 Invoke-Expression $PSScriptRoot\Theme2020.deskthemepack
 
 Read-Host -Prompt 'You may need to restart your computer.'
-Read-Host -Prompt 'Press any key ...'
+Read-Host -Prompt 'Press any key...'
 
 #restart-computer
