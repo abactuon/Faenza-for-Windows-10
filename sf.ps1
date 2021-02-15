@@ -251,9 +251,9 @@ REG ADD "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\She
 REG ADD "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /T REG_SZ  /V "4" /D "$IR\folder-open.ico,0" /f
 # Disk Icon
 REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /T REG_SZ  /V "107" /D "$IR\DiskWindows.ico,0" /f
-REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /T REG_SZ  /V "8" /D "$IR\DiskStandart.ico,0" /f
+REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /T REG_SZ  /V "8" /D "$IR\DiskStandart1.ico,0" /f
 REG ADD "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /T REG_SZ  /V "107" /D "$IR\DiskWindows.ico,0" /f
-REG ADD "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /T REG_SZ  /V "8" /D "$IR\DiskStandart.ico,0" /f
+REG ADD "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /T REG_SZ  /V "8" /D "$IR\DiskStandart1.ico,0" /f
 
 #
 REG ADD "HKCR\txtfile\DefaultIcon" /ve /d "$IR\text-plain.ico,0" /f
