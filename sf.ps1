@@ -276,6 +276,9 @@ REG ADD "HKCR\.torrent\DefaultIcon" /ve /d "$IR\torrent.ico,0" /f
 
 ie4uinit.exe -show
 
+# Restart Explorer
+Stop-Process -ProcessName explorer
+
 # Install Theme
 Invoke-Expression $PSScriptRoot\Theme2020.deskthemepack
 
