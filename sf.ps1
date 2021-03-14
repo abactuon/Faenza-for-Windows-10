@@ -51,7 +51,7 @@ Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer
 If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CLSID\{20D04FE0-3AEA-1069-A2D8-08002B30309D}\DefaultIcon")) {
 	New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CLSID\{20D04FE0-3AEA-1069-A2D8-08002B30309D}\DefaultIcon" 
 }
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CLSID\{20D04FE0-3AEA-1069-A2D8-08002B30309D}\DefaultIcon" -Name "(default)" -Value "$IR\hardinfo.ico,0"
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CLSID\{20D04FE0-3AEA-1069-A2D8-08002B30309D}\DefaultIcon" -Name "(default)" -Value "$IR\hardinfo.ico,0" -Force
 
 # Hide Libraries in Navigation Pane
 If (!(Test-Path "HKCU:\SOFTWARE\Classes\CLSID\{031E4825-7B94-4dc3-B131-E946B44C8DD5}")) {
@@ -144,7 +144,7 @@ Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer
 $TargetDirectory = "C:\Windows"
 $DesktopIni = @"
 [.ShellClassInfo]
-IconResource=%USERPROFILE%\$IR\folder-windows.ico,0
+IconResource=$IR\folder-windows.ico,0
 "@
 
 If (Test-Path "$($TargetDirectory)\desktop.ini")  {
